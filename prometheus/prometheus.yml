@@ -1,0 +1,4 @@
+prometheus:
+  image: prom/prometheus
+  volumes:
+    - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml

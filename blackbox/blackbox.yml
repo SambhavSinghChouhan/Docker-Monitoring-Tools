@@ -1,0 +1,4 @@
+blackbox-exporter:
+  image: prom/blackbox-exporter
+  volumes:
+    - ./blackbox/blackbox.yml:/config/blackbox.yml
