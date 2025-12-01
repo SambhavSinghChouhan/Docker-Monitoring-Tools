@@ -1,23 +1,43 @@
 pipeline {
     agent any
 
+    environment {
+        EC2_USER = 'jenkinsdeploy'
+        EC2_HOST = '98.86.177.131'
+        DEPLOY_DIR = '~/deploy-repo'
+    }
+
     stages {
-        stage('Checkout') {
+        stage('Test SSH Connection') {
             steps {
-                checkout scm
+                sshagent(['ec2-ssh-key']) {
+                    sh "ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_HOST} 'echo SSH OK'"
+                }
             }
         }
 
-        stage('Build Docker Images') {
+        stage('Deploy Docker Compose') {
             steps {
-                sh 'docker compose build'
-            }
-        }
+                sshagent(['ec2-ssh-key']) {
+                    sh """
+                        ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_HOST} '
+                            # create directory if not exists
+                            mkdir -p ${DEPLOY_DIR}
+                        '
 
-        stage('Run Containers') {
-            steps {
-                sh 'docker compose up -d'
+                        # copy repo to EC2
+                        rsync -avz -e "ssh -o StrictHostKeyChecking=no" ./ ${EC2_USER}@${EC2_HOST}:${DEPLOY_DIR}/
+
+                        # run docker-compose on EC2
+                        ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_HOST} '
+                            cd ${DEPLOY_DIR}
+                            docker-compose down || true
+                            docker-compose up -d --build
+                        '
+                    """
+                }
             }
         }
     }
 }
+
