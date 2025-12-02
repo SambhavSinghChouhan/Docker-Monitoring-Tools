@@ -1,0 +1,4 @@
+# Ignore database data folders
+postgres/data/
+mysql/data/
+mongo/data/

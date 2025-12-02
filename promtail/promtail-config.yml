@@ -1,4 +1,0 @@
-promtail:
-  image: grafana/promtail:latest
-  volumes:
-    - ./promtail/promtail-config.yml:/etc/promtail/config.yml

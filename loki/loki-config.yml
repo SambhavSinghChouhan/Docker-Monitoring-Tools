@@ -1,4 +1,0 @@
-loki:
-  image: grafana/loki:latest
-  volumes:
-    - ./loki/loki-config.yml:/etc/loki/config.yml
