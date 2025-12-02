@@ -5,7 +5,7 @@ pipeline {
         EC2_USER = 'ubuntu'
         EC2_HOST = '3.237.180.117'
         DEPLOY_DIR = '~/deploy-repo'
-        PEM_FILE = '/home/sambhav_singh/docker/docker-ec2-key.pem'
+        PEM_FILE = '/var/lib/jenkins/docker-ec2-key.pem'
     }
 
     stages {
