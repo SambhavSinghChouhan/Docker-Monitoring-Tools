@@ -30,19 +30,7 @@ services:
     networks:
       - monitor
 
-  mysql:
-    image: mysql:8
-    container_name: mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: rootpass
-      MYSQL_DATABASE: appdb
-    ports:
-      - "3307:3306"
-    volumes:
-      - ./mysql/data:/var/lib/mysql
-    networks:
-      - monitor
-
+  
   mongodb:
     image: mongo:6
     container_name: mongodb
@@ -61,21 +49,7 @@ services:
     networks:
       - monitor
 
-  nodejs:
-    build: ./nodejs
-    container_name: nodejs
-    ports:
-      - "4000:4000"
-    networks:
-      - monitor
-
-  python:
-    build: ./python
-    container_name: python
-    ports:
-      - "5000:5000"
-    networks:
-      - monitor
+  
 
   php:
     build: ./php
@@ -85,11 +59,6 @@ services:
     networks:
       - monitor
 
-  java:
-    build: ./java
-    container_name: java
-    networks:
-      - monitor
 
   rabbitmq:
     image: rabbitmq:3-management
@@ -119,16 +88,6 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     depends_on:
       - zookeeper
-    networks:
-      - monitor
-
-  prometheus:
-    image: prom/prometheus
-    container_name: prometheus
-    volumes:
-      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-    ports:
-      - "9090:9090"
     networks:
       - monitor
 
