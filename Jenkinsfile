@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         EC2_USER = 'ubuntu'                        // EC2 user
-        EC2_HOST = '3.237.180.117'                // EC2 public IP
+        EC2_HOST = '23.23.162.184'                // EC2 public IP
         PEM_FILE = '/var/lib/jenkins/docker-ec2-key.pem' // Path to PEM file inside Jenkins
         DEPLOY_DIR = '~/deploy-repo'               // Deployment directory on EC2
     }
