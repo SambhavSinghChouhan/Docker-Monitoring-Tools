@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         EC2_USER = 'jenkinsdeploy'
-        EC2_HOST = '98.86.177.131'
+        EC2_HOST = '3.237.180.117'
         DEPLOY_DIR = '~/deploy-repo'
     }
 
