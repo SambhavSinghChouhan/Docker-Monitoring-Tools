@@ -28,36 +28,11 @@ pipeline {
             }
         }
 
-        stage('Install Docker & Docker Compose on EC2') {
-            steps {
-                sshagent(['ec2-ssh-key']) {
-                    sh """
-                        ssh -i ${PEM_FILE} -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_HOST} '
-                            echo "=== Installing Docker ==="
-                            sudo apt-get update -y
-                            sudo apt-get install -y docker.io
-                            sudo usermod -aG docker ubuntu
-
-                            echo "=== Installing Docker Compose ==="
-                            sudo curl -L "https://github.com/docker/compose/releases/download/v2.23.3/docker-compose-\\\$(uname -s)-\\\$(uname -m)" \\
-                                -o /usr/local/bin/docker-compose
-                            sudo chmod +x /usr/local/bin/docker-compose
-
-                            echo "=== Docker Versions ==="
-                            docker --version
-                            docker-compose --version
-                        '
-                    """
-                }
-            }
-        }
-
         stage('Deploy Docker Compose') {
             steps {
                 sshagent(['ec2-ssh-key']) {
                     sh """
                         ssh -i ${PEM_FILE} -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_HOST} '
-                            
                             echo "=== Cleaning old deployment ==="
                             rm -rf ${DEPLOY_DIR}
 
