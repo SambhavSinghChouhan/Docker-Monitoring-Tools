@@ -2,10 +2,10 @@ pipeline {
     agent any
 
     environment {
-        EC2_USER = 'ubuntu'                        // EC2 user
-        EC2_HOST = '23.23.162.184'                // EC2 public IP
-        PEM_FILE = '/var/lib/jenkins/docker-ec2-key.pem' // Path to PEM file inside Jenkins
-        DEPLOY_DIR = '~/deploy-repo'               // Deployment directory on EC2
+        EC2_USER = 'ubuntu'
+        EC2_HOST = '23.23.162.184'
+        PEM_FILE = '/var/lib/jenkins/docker-ec2-key.pem'
+        DEPLOY_DIR = '~/deploy-repo'
     }
 
     stages {
@@ -28,21 +28,52 @@ pipeline {
             }
         }
 
+        stage('Install Docker & Docker Compose on EC2') {
+            steps {
+                sshagent(['ec2-ssh-key']) {
+                    sh """
+                        ssh -i ${PEM_FILE} -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_HOST} '
+                            echo "=== Installing Docker ==="
+                            sudo apt-get update -y
+                            sudo apt-get install -y docker.io
+                            sudo usermod -aG docker ubuntu
+
+                            echo "=== Installing Docker Compose ==="
+                            sudo curl -L "https://github.com/docker/compose/releases/download/v2.23.3/docker-compose-$(uname -s)-$(uname -m)" \\
+                                -o /usr/local/bin/docker-compose
+                            sudo chmod +x /usr/local/bin/docker-compose
+
+                            echo "=== Docker Versions ==="
+                            docker --version
+                            docker-compose --version
+                        '
+                    """
+                }
+            }
+        }
+
         stage('Deploy Docker Compose') {
             steps {
                 sshagent(['ec2-ssh-key']) {
                     sh """
                         ssh -i ${PEM_FILE} -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_HOST} '
-                            # Remove old repo and clone fresh
+                            
+                            echo "=== Cleaning old deployment ==="
                             rm -rf ${DEPLOY_DIR}
+
+                            echo "=== Cloning fresh repo ==="
                             git clone https://github.com/SambhavSinghChouhan/Docker-Monitoring-Tools.git ${DEPLOY_DIR}
 
-                            # Move into deployment folder
                             cd ${DEPLOY_DIR}
 
-                            # Stop old containers if any, then rebuild and run
+                            echo "=== Stopping old containers ==="
                             docker-compose down || true
+
+                            echo "=== Starting all containers ==="
                             docker-compose up -d --build
+
+                            echo "=== Running Containers ==="
+                            docker ps
                         '
                     """
                 }
@@ -59,4 +90,3 @@ pipeline {
         }
     }
 }
-

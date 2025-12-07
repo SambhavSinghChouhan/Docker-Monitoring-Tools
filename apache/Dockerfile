@@ -1,20 +1,10 @@
-# Base image
-FROM httpd:latest
+FROM ubuntu:22.04
 
-# Set working directory
-WORKDIR /usr/local/apache2
+RUN apt-get update && \
+    apt-get install -y apache2 && \
+    a2dismod mpm_event && \
+    a2enmod mpm_prefork
 
-# Copy custom Apache config
-COPY httpd.conf /usr/local/apache2/conf/httpd.conf
-
-# Copy website files (optional)
-COPY html/ /usr/local/apache2/htdocs/
-
-# Expose HTTP port
 EXPOSE 80
 
-# Healthcheck
-HEALTHCHECK CMD curl --fail http://localhost/ || exit 1
-
-# Default command
-CMD ["httpd-foreground"]
+CMD ["apache2ctl", "-D", "FOREGROUND"]
