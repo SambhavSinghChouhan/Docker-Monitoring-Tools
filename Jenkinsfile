@@ -6,15 +6,31 @@ pipeline {
     }
 
     stages {
+        stage('Prepare') {
+            steps {
+                sh '''
+                  set -euo pipefail
+                  echo "Job executed on: $(hostname)"
+                  echo "User: $(whoami)"
+                  echo "Docker version:"
+                  docker --version || true
+                  echo "Docker compose version:"
+                  docker compose version || echo "docker compose not found"
+                '''
+            }
+        }
+
         stage('Deploy') {
             steps {
                 sh """
-                    rm -rf ${DEPLOY_DIR}
-                    git clone https://github.com/SambhavSinghChouhan/Docker-Monitoring-Tools.git ${DEPLOY_DIR}
-                    cd ${DEPLOY_DIR}
-                    docker-compose down || true
-                    docker-compose up -d --build
-                    docker ps
+                  set -euo pipefail
+                  rm -rf ${DEPLOY_DIR}
+                  git clone https://github.com/SambhavSinghChouhan/Docker-Monitoring-Tools.git ${DEPLOY_DIR}
+                  cd ${DEPLOY_DIR}
+                  # use docker compose (v2)
+                  docker compose down || true
+                  docker compose up -d --build
+                  docker ps -a
                 """
             }
         }
