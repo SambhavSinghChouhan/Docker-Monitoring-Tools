@@ -2,15 +2,17 @@ pipeline {
     agent any
 
     environment {
-        // Jenkins workspace automatically contains your repo
         WORKSPACE_DIR = "${env.WORKSPACE}"
     }
 
     stages {
         stage('Prepare') {
             steps {
-                sh '''
-                  set -euo pipefail
+                sh '''#!/bin/bash
+                  set -e
+                  set -u
+                  set -o pipefail
+
                   echo "Job executed on: $(hostname)"
                   echo "User: $(whoami)"
                   echo "Docker version:"
@@ -23,10 +25,12 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                sh """
-                  set -euo pipefail
+                sh '''#!/bin/bash
+                  set -e
+                  set -u
+                  set -o pipefail
 
-                  cd ${WORKSPACE_DIR}
+                  cd "${WORKSPACE_DIR}"
 
                   echo "Stopping old containers..."
                   docker compose down || true
@@ -36,7 +40,7 @@ pipeline {
 
                   echo "Containers running:"
                   docker ps -a
-                """
+                '''
             }
         }
     }
