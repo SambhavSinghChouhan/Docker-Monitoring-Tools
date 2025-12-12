@@ -2,7 +2,8 @@ pipeline {
     agent any
 
     environment {
-        DEPLOY_DIR = '/home/ubuntu/deploy-repo'
+        // Jenkins workspace automatically contains your repo
+        WORKSPACE_DIR = "${env.WORKSPACE}"
     }
 
     stages {
@@ -24,12 +25,16 @@ pipeline {
             steps {
                 sh """
                   set -euo pipefail
-                  rm -rf ${DEPLOY_DIR}
-                  git clone https://github.com/SambhavSinghChouhan/Docker-Monitoring-Tools.git ${DEPLOY_DIR}
-                  cd ${DEPLOY_DIR}
-                  # use docker compose (v2)
+
+                  cd ${WORKSPACE_DIR}
+
+                  echo "Stopping old containers..."
                   docker compose down || true
+
+                  echo "Starting new containers..."
                   docker compose up -d --build
+
+                  echo "Containers running:"
                   docker ps -a
                 """
             }
