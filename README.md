@@ -42,23 +42,6 @@ This project focuses on:
 ## 🏗️ Architecture
 
 
-🔹 `text` after ``` keeps it clean  
-🔹 GitHub will **never break this layout**  
-🔹 This is how **senior DevOps READMEs** do it
-
----
-
-## 🔥 Even Better (Optional Pro Upgrade)
-
-If you want it to look **enterprise-grade**, keep **both**:
-
-1. **ASCII diagram** (quick understanding)
-2. **Image diagram** (visual clarity)
-
-Example:
-
-```md
-## 🏗️ Architecture
 
 ```text
 Jenkins Pipeline
@@ -78,6 +61,7 @@ Docker Compose
 <!-- IMAGE: Add an architecture diagram (Jenkins → Docker → Prometheus → Grafana → Loki) -->
 
 ---
+```
 
 ## 📦 Components Included
 
