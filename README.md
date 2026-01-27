@@ -229,19 +229,21 @@ Grafana dashboards include:
 
 ## 📂 Repository Structure
 
+
+```text
 .
 ├── docker-compose.yml
 ├── Jenkinsfile
 ├── prometheus/
-│ └── prometheus.yml
+│   └── prometheus.yml
 ├── grafana/
-│ └── provisioning/
-│ └── datasources/
-│ └── prometheus.yml
+│   └── provisioning/
+│       └── datasources/
+│           └── prometheus.yml
 ├── loki/
-│ └── loki-config.yml
+│   └── loki-config.yml
 └── README.md
-
+```
 
 ---
 
