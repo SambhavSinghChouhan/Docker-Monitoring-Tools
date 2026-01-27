@@ -179,8 +179,8 @@ Within minutes, the monitoring stack will be live.
 You can also run the project manually without Jenkins:
 
 ```bash
-git clone <your-repo-url>
-cd <repo-name>
+git clone https://github.com/SambhavSinghChouhan/Docker-Monitoring-Tools.git
+cd Docker-Monitoring-Tools
 docker compose up -d
 ```
 This is useful for:
